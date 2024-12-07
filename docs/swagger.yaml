@@ -1,0 +1,75 @@
+basePath: /
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a sample server for Swagger with Gin.
+  title: Swagger Example API
+  version: "1.0"
+paths:
+  /dbuser/{name}:
+    get:
+      description: Get user by name from PostgreSQL database
+      parameters:
+      - description: User Name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get User from DB
+  /ping:
+    get:
+      description: Test the API
+      responses:
+        "200":
+          description: pong
+          schema:
+            type: string
+      summary: Ping API
+  /user:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user
+      parameters:
+      - description: User Name
+        in: body
+        name: name
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create User
+  /user/{name}:
+    get:
+      description: Get user by name
+      parameters:
+      - description: User Name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get User
+swagger: "2.0"
