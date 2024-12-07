@@ -1,6 +1,6 @@
 module GoProject
 
-go 1.23
+go 1.17
 
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
