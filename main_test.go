@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -48,7 +50,11 @@ func TestCreateUserHandler(t *testing.T) {
 func TestGetUserFromDBHandler(t *testing.T) {
 	// 初始化資料庫連接
 	var err error
-	connStr := "user=username dbname=mydb sslmode=disable password=mypassword"
+	connStr := fmt.Sprintf("user=%s dbname=%s sslmode=disable password=%s host=%s",
+		os.Getenv("POSTGRES_USER"),
+		os.Getenv("POSTGRES_DB"),
+		os.Getenv("POSTGRES_PASSWORD"),
+		os.Getenv("POSTGRES_HOST"))
 	db, err = sql.Open("postgres", connStr)
 	if err != nil {
 		t.Fatal(err)

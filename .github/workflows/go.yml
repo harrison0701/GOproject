@@ -13,6 +13,21 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: mypassword
+          POSTGRES_DB: mydb
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -25,5 +40,17 @@ jobs:
     - name: Install dependencies
       run: go mod tidy
 
+    - name: Wait for PostgreSQL
+      run: |
+        until pg_isready -h localhost -p 5432 -U postgres; do
+          echo "Waiting for PostgreSQL..."
+          sleep 1
+        done
+
     - name: Run tests
+      env:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: mypassword
+        POSTGRES_DB: mydb
+        POSTGRES_HOST: localhost
       run: go test -v ./...
