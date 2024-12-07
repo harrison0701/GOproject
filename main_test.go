@@ -9,6 +9,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
@@ -61,8 +62,19 @@ func TestGetUserFromDBHandler(t *testing.T) {
 	}
 	defer db.Close()
 
+	// 創建 users 表
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        name TEXT NOT NULL,
+        email TEXT NOT NULL,
+        created_at TIMESTAMP NOT NULL DEFAULT NOW()
+    )`)
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	// 插入測試數據
-	_, err = db.Exec("INSERT INTO users (name) VALUES ($1)", "testuser")
+	_, err = db.Exec("INSERT INTO users (name, email, created_at) VALUES ($1, $2, $3)", "testuser", "testuser@example.com", time.Now())
 	if err != nil {
 		t.Fatal(err)
 	}
